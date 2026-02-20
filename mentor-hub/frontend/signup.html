@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Mentor Hub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="signup-header">
+                <h1 class="signup-title">Create Account</h1>
+                <p class="signup-subtitle">Join Mentor Hub and connect with mentors</p>
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="fullname" 
+                        name="fullname" 
+                        placeholder="Enter your full name" 
+                        required
+                    >
+                    <div class="error-message" id="fullname-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Enter your email" 
+                        required
+                    >
+                    <div class="error-message" id="email-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Choose a username" 
+                        required
+                    >
+                    <div class="error-message" id="username-error"></div>
+                </div>
+
+                <div class="password-group">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Create a password" 
+                            required
+                        >
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input 
+                            type="password" 
+                            id="confirm-password" 
+                            name="confirm-password" 
+                            placeholder="Confirm password" 
+                            required
+                        >
+                        <div class="error-message" id="confirm-password-error"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="signup-btn">Create Account</button>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="login.html">Log in here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('input').forEach(el => {
+                el.classList.remove('error');
+            });
+
+            // Get form values
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            let isValid = true;
+
+            // Validation
+            if (fullname.length < 2) {
+                showError('fullname', 'Full name must be at least 2 characters');
+                isValid = false;
+            }
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                showError('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            if (username.length < 3) {
+                showError('username', 'Username must be at least 3 characters');
+                isValid = false;
+            }
+
+            if (password.length < 6) {
+                showError('password', 'Password must be at least 6 characters');
+                isValid = false;
+            }
+
+            if (password !== confirmPassword) {
+                showError('confirm-password', 'Passwords do not match');
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Here you would typically send the data to a backend server
+                console.log('Form submitted:', {
+                    fullname,
+                    email,
+                    username,
+                    password
+                });
+                alert('Account created successfully! Redirecting to login...');
+                // Redirect to login page after successful signup
+                // window.location.href = 'login.html';
+            }
+        });
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + '-error');
+            const inputElement = document.getElementById(fieldId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            inputElement.classList.add('error');
+        }
+    </script>
+</body>
+</html>

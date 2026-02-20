@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MentorHub Form</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">MentorHub</div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Mentors</a></li>
+        <li><a href="#" class="login-btn">Log in</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1 class="gradient-text">Master your craft with expert guidance</h1>
+    <p class="subtext">
+      Fill in your details to connect with mentors tailored to your career path.
+    </p>
+
+    <form class="mentor-form">
+      <!-- Current Job -->
+      <label for="job">Current Job</label>
+      <input type="text" id="job" name="job" placeholder="e.g., Software Engineer" required>
+
+      <!-- Years of Experience -->
+      <label for="experience">Years of Experience</label>
+      <input type="number" id="experience" name="experience" min="0" placeholder="e.g., 5" required>
+
+      <!-- Tools You Use -->
+      <label for="tools">Tools You Use</label>
+      <input type="text" id="tools" name="tools" placeholder="e.g., Figma, Python, Excel">
+
+      <!-- Interests (clickable spans) -->
+      <label>Interests</label>
+      <div class="interests">
+        <span data-value="Tech">Tech</span>
+        <span data-value="Design">Design</span>
+        <span data-value="Healthcare">Healthcare</span>
+        <span data-value="Business">Business</span>
+        <span data-value="Other">Other</span>
+      </div>
+
+      <!-- Hidden input to store selected interests -->
+      <input type="hidden" id="selectedInterests" name="interests">
+
+      <!-- Submit -->
+      <button type="submit" class="cta-btn">Find a Mentor Now</button>
+    </form>
+  </main>
+
+  <script>
+    const interestSpans = document.querySelectorAll('.interests span');
+    const hiddenInput = document.getElementById('selectedInterests');
+
+    interestSpans.forEach(span => {
+      span.addEventListener('click', () => {
+        span.classList.toggle('active');
+        const selected = Array.from(interestSpans)
+          .filter(s => s.classList.contains('active'))
+          .map(s => s.dataset.value);
+        hiddenInput.value = selected.join(',');
+      });
+    });
+  </script>
+</body>
+</html>
