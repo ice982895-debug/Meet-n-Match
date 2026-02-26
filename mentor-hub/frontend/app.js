@@ -1,14 +1,14 @@
 const API_URL = "http://localhost:8000/api";
 
-const hero_section = document.getElementById('hero-section');
-const form_section = document.getElementById('form-section');
-const result_section = document.getElementById('results-section');
-const mentor_section = document.getElementById('mentors-section');
-const form = document.getElementById('match-form');
-const loading_indicator = document.getElementById('loading');
-const mentor_grid = document.getElementById('mentors-grid');
-const directory_grid = document.getElementById('directory-grid');
-const modal = document.getElementById('success-modal');
+const hero_section = document.getElementById('landing-hero');
+const form_section = document.getElementById('mentee-form-section');
+const result_section = document.getElementById('match-results');
+const mentor_section = document.getElementById('mentor-directory');
+const form = document.getElementById('mentee-profile-form');
+const loading_indicator = document.getElementById('results-loader');
+const mentor_grid = document.getElementById('matched-mentors-grid');
+const directory_grid = document.getElementById('mentor-cards-container');
+const modal = document.getElementById('request-success-modal');
 
 // State
 let selectedTools = new Set();
@@ -19,22 +19,22 @@ let currentPage = 1;
 function showSection(sectionId) {
     // Hide all main sections
     [hero_section, form_section, result_section, mentor_section].forEach(el => {
-        el.classList.add('hidden');
+        el.classList.add('is-hidden');
     });
     // Show target
-    document.getElementById(sectionId).classList.remove('hidden');
+    document.getElementById(sectionId).classList.remove('is-hidden');
     // Hide mobile menu if open
-    document.querySelector('.mobile-menu')?.classList.add('hidden');
+    document.querySelector('.mobile-navigation')?.classList.add('is-hidden');
 }
 
-document.getElementById('nav-home').addEventListener('click', (e) => { e.preventDefault(); showSection('hero-section'); });
+document.getElementById('nav-home').addEventListener('click', (e) => { e.preventDefault(); showSection('landing-hero'); });
 document.getElementById('nav-mentors').addEventListener('click', (e) => {
     e.preventDefault();
-    showSection('mentors-section');
+    showSection('mentor-directory');
     loadDirectory();
     // Also load meta for the filter dropdown
     fetch(`${API_URL}/meta`).then(r => r.json()).then(d => {
-        const select = document.getElementById('filter-role');
+        const select = document.getElementById('role-selector');
         if (select.children.length <= 1) { // Only if not populated
             d.job_titles.forEach(t => {
                 const opt = document.createElement('option');
@@ -47,25 +47,25 @@ document.getElementById('nav-mentors').addEventListener('click', (e) => {
 });
 
 // Mobile Nav
-const menuToggle = document.querySelector('.menu-toggle');
+const menuToggle = document.querySelector('.menu-hamburger');
 if (menuToggle) {
     menuToggle.addEventListener('click', () => {
-        document.querySelector('.mobile-menu').classList.toggle('hidden');
+        document.querySelector('.mobile-navigation').classList.toggle('is-hidden');
     });
 }
-document.getElementById('mob-nav-home')?.addEventListener('click', () => { showSection('hero-section'); });
+document.getElementById('mob-nav-home')?.addEventListener('click', () => { showSection('landing-hero'); });
 document.getElementById('mob-nav-mentors')?.addEventListener('click', () => {
-    showSection('mentors-section');
+    showSection('mentor-directory');
     loadDirectory();
 });
 
 document.getElementById('cta-btn').addEventListener('click', () => {
-    showSection('form-section');
+    showSection('mentee-form-section');
     loadMetadata();
 });
 
-document.getElementById('back-btn').addEventListener('click', () => {
-    showSection('form-section');
+document.getElementById('back-to-form-btn').addEventListener('click', () => {
+    showSection('mentee-form-section');
 });
 
 // --- Data Loading ---
@@ -81,11 +81,11 @@ async function loadMetadata(jobTitle = null) {
 
         // Only repopulate job titles if we are doing the initial load
         if (!jobTitle) {
-            populateSelect('job-title', data.job_titles);
+            populateSelect('job-title-input', data.job_titles);
         }
 
-        populateTags('tools-container', data.tools, selectedTools);
-        populateTags('interests-container', data.interests, selectedInterests);
+        populateTags('skills-list', data.tools, selectedTools);
+        populateTags('hobbies-list', data.interests, selectedInterests);
     } catch (err) {
         console.error("Failed to load metadata:", err);
         // alert("Could not connect to backend. Ensure FastAPI is running!");
@@ -93,7 +93,7 @@ async function loadMetadata(jobTitle = null) {
 }
 
 // Event Listener for Job Title Change
-const jobTitleSelect = document.getElementById('job-title');
+const jobTitleSelect = document.getElementById('job-title-input');
 if (jobTitleSelect) {
     jobTitleSelect.addEventListener('change', (e) => {
         const selectedTitle = e.target.value;
@@ -149,16 +149,16 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // UI Updates
-    showSection('results-section');
+    showSection('match-results');
     mentor_grid.innerHTML = '';
-    loading_indicator.classList.remove('hidden');
+    loading_indicator.classList.remove('is-hidden');
 
     const payload = {
-        job_title: document.getElementById('job-title').value,
-        years_of_experience: parseInt(document.getElementById('experience').value),
+        job_title: document.getElementById('job-title-input').value,
+        years_of_experience: parseInt(document.getElementById('experience-years').value),
         tools: Array.from(selectedTools),
         interests: Array.from(selectedInterests),
-        bio: document.getElementById('bio').value
+        bio: document.getElementById('bio-textarea').value
     };
 
     try {
@@ -174,7 +174,7 @@ form.addEventListener('submit', async (e) => {
         console.error(err);
         mentor_grid.innerHTML = '<p class="error">Failed to match. Please try again.</p>';
     } finally {
-        loading_indicator.classList.add('hidden');
+        loading_indicator.classList.add('is-hidden');
     }
 });
 
@@ -214,18 +214,18 @@ function createMentorCard(mentor, isMatch = false) {
             ${headerAction}
         </div>
         
-        <p class="mentor-bio">${mentor.bio}</p>
+        <p class="mentor-description">${mentor.bio}</p>
         
-        <div class="tags-preview">
+        <div class="selected-tags">
             ${tagsHtml}
-            ${((mentor.tools?.length || 0) + (mentor.interests?.length || 0)) > 3 ? '<span class="mini-tag">+more</span>' : ''}
+            ${((mentor.tools?.length || 0) + (mentor.interests?.length || 0)) > 3 ? '<span class="tag-badge">+more</span>' : ''}
         </div>
         
-        <button class="btn-outline request-btn">Request Mentorship</button>
+        <button class="outline-btn send-request-btn">Request Mentorship</button>
     `;
 
-    card.querySelector('.request-btn').addEventListener('click', () => {
-        modal.classList.remove('hidden');
+    card.querySelector('.send-request-btn').addEventListener('click', () => {
+        modal.classList.remove('is-hidden');
     });
 
     return card;
@@ -233,12 +233,12 @@ function createMentorCard(mentor, isMatch = false) {
 
 // --- Directory Logic ---
 async function loadDirectory() {
-    const role = document.getElementById('filter-role').value;
-    const tool = document.getElementById('filter-tool').value;
-    const interest = document.getElementById('filter-interest').value;
+    const role = document.getElementById('role-selector').value;
+    const tool = document.getElementById('tool-selector').value;
+    const interest = document.getElementById('interest-selector').value;
 
-    const loading = document.getElementById('directory-loading');
-    loading.classList.remove('hidden');
+    const loading = document.getElementById('directory-loader');
+    loading.classList.remove('is-hidden');
     directory_grid.innerHTML = '';
 
     try {
@@ -258,9 +258,9 @@ async function loadDirectory() {
         });
 
         // Update Pagination Info
-        document.getElementById('page-info').textContent = `Page ${data.page} of ${data.total_pages}`;
-        document.getElementById('prev-page').disabled = data.page <= 1;
-        document.getElementById('next-page').disabled = data.page >= data.total_pages;
+        document.getElementById('current-page-info').textContent = `Page ${data.page} of ${data.total_pages}`;
+        document.getElementById('prev-page-btn').disabled = data.page <= 1;
+        document.getElementById('next-page-btn').disabled = data.page >= data.total_pages;
 
     } catch (err) {
         console.error("Directory error", err);
@@ -270,24 +270,24 @@ async function loadDirectory() {
 }
 
 // Initial Listeners for Filters
-document.getElementById('apply-filters').addEventListener('click', () => {
+document.getElementById('apply-search-filters').addEventListener('click', () => {
     currentPage = 1;
     loadDirectory();
 });
 
-document.getElementById('prev-page').addEventListener('click', () => {
+document.getElementById('prev-page-btn').addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
         loadDirectory();
     }
 });
 
-document.getElementById('next-page').addEventListener('click', () => {
+document.getElementById('next-page-btn').addEventListener('click', () => {
     currentPage++;
     loadDirectory();
 });
 
 // Modal Close
-document.getElementById('close-modal').addEventListener('click', () => {
-    modal.classList.add('hidden');
+document.getElementById('modal-close-btn').addEventListener('click', () => {
+    modal.classList.add('is-hidden');
 });

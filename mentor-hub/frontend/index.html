@@ -11,137 +11,137 @@
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="logo">MentorHub</div>
-        <div class="nav-links">
+    <nav class="top-navigation">
+        <div class="site-branding">MentorHub</div>
+        <div class="navigation-items">
             <a href="#" id="nav-home">Home</a>
             <a href="#" id="nav-mentors">Mentors</a>
-            <a href="#" class="btn-secondary">Log in</a>
+            <a href="#" class="secondary-btn">Log in</a>
         </div>
-        <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        <button class="menu-hamburger" aria-label="Toggle menu">☰</button>
     </nav>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu hidden">
+    <div class="mobile-navigation is-hidden">
         <a href="#" id="mob-nav-home">Home</a>
         <a href="#" id="mob-nav-mentors">Mentors</a>
-        <a href="#" class="btn-secondary">Log in</a>
+        <a href="#" class="secondary-btn">Log in</a>
     </div>
 
     <!-- Hero Section -->
-    <section id="hero-section" class="hero">
-        <div class="hero-content">
-            <h1>Master your craft with <span class="gradient-text">expert guidance</span></h1>
+    <section id="landing-hero" class="landing-section">
+        <div class="hero-text-area">
+            <h1>Master your craft with <span class="gradient-accent">expert guidance</span></h1>
             <p>Connect with world-class mentors in Tech, Design, Healthcare, and Business. Fast-track your career growth
                 today.</p>
-            <button id="cta-btn" class="btn-primary">Find a Mentor Now</button>
+            <button id="cta-btn" class="primary-btn">Find a Mentor Now</button>
         </div>
-        <div class="hero-image">
-            <div class="abstract-shape"></div>
+        <div class="hero-graphic-area">
+            <div class="decorative-shape"></div>
             <!-- Placeholder for illustration -->
         </div>
     </section>
 
     <!-- Mentors Directory Section (Hidden by default) -->
-    <section id="mentors-section" class="container hidden">
+    <section id="mentor-directory" class="main-wrapper is-hidden">
         <h2>Explore Our Mentors</h2>
         <p>Browse through our community of experts.</p>
 
         <!-- Filters -->
-        <div class="filters-container">
-            <select id="filter-role">
+        <div class="filter-box">
+            <select id="role-selector">
                 <option value="">All Roles</option>
                 <!-- Populated via JS -->
             </select>
-            <input type="text" id="filter-tool" placeholder="Filter by Tool (e.g. Python)">
-            <input type="text" id="filter-interest" placeholder="Filter by Interest">
-            <button id="apply-filters" class="btn-primary">Search</button>
+            <input type="text" id="tool-selector" placeholder="Filter by Tool (e.g. Python)">
+            <input type="text" id="interest-selector" placeholder="Filter by Interest">
+            <button id="apply-search-filters" class="primary-btn">Search</button>
         </div>
 
-        <div id="directory-loading" class="hidden">
-            <div class="spinner"></div>
+        <div id="directory-loader" class="is-hidden">
+            <div class="loading-ring"></div>
         </div>
 
-        <div id="directory-grid" class="grid">
+        <div id="mentor-cards-container" class="card-grid">
             <!-- Mentor Cards Injected Here -->
         </div>
 
         <div class="pagination">
-            <button id="prev-page" class="btn-secondary" disabled>Previous</button>
-            <span id="page-info">Page 1</span>
-            <button id="next-page" class="btn-secondary">Next</button>
+            <button id="prev-page-btn" class="secondary-btn" disabled>Previous</button>
+            <span id="current-page-info">Page 1</span>
+            <button id="next-page-btn" class="secondary-btn">Next</button>
         </div>
     </section>
 
     <!-- Application Form Section (Hidden by default) -->
-    <section id="form-section" class="container hidden">
-        <div class="form-wrapper">
+    <section id="mentee-form-section" class="main-wrapper is-hidden">
+        <div class="form-box">
             <h2>Tell us about yourself</h2>
             <p>We'll match you with mentors who fit your career goals.</p>
 
-            <form id="match-form">
-                <div class="form-group">
-                    <label for="job-title">Current Role / Job Title</label>
-                    <select id="job-title" required>
+            <form id="mentee-profile-form">
+                <div class="input-group">
+                    <label for="job-title-input">Current Role / Job Title</label>
+                    <select id="job-title-input" required>
                         <option value="" disabled selected>Select your role...</option>
                         <!-- Populated via JS -->
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="experience">Years of Experience</label>
-                    <input type="number" id="experience" min="0" max="50" placeholder="e.g. 2" required>
+                <div class="input-group">
+                    <label for="experience-years">Years of Experience</label>
+                    <input type="number" id="experience-years" min="0" max="50" placeholder="e.g. 2" required>
                 </div>
 
-                <div class="form-group">
+                <div class="input-group">
                     <label>Tools you use (Select multiple)</label>
-                    <div id="tools-container" class="tags-container">
+                    <div id="skills-list" class="checkbox-list">
                         <!-- Populated via JS -->
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="input-group">
                     <label>Interests (Select multiple)</label>
-                    <div id="interests-container" class="tags-container">
+                    <div id="hobbies-list" class="checkbox-list">
                         <!-- Populated via JS -->
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="bio">Short Bio / Goal</label>
-                    <textarea id="bio" rows="4"
+                <div class="input-group">
+                    <label for="bio-textarea">Short Bio / Goal</label>
+                    <textarea id="bio-textarea" rows="4"
                         placeholder="I want to transition from graphic design to product design..." required></textarea>
                 </div>
 
-                <button type="submit" class="btn-primary full-width">Find Matches</button>
+                <button type="submit" class="primary-btn full-width-btn">Find Matches</button>
             </form>
         </div>
     </section>
 
     <!-- Results Section (Hidden by default) -->
-    <section id="results-section" class="container hidden">
-        <div class="results-header">
+    <section id="match-results" class="main-wrapper is-hidden">
+        <div class="results-title-section">
             <h2>Your Top Matches</h2>
-            <button id="back-btn" class="btn-text">← Back to Form</button>
+            <button id="back-to-form-btn" class="ghost-btn">← Back to Form</button>
         </div>
 
-        <div id="loading" class="hidden">
-            <div class="spinner"></div>
+        <div id="results-loader" class="is-hidden">
+            <div class="loading-ring"></div>
             <p>Analyzing 500+ mentors...</p>
         </div>
 
-        <div id="mentors-grid" class="grid">
+        <div id="matched-mentors-grid" class="card-grid">
             <!-- Mentor Cards Injected Here -->
         </div>
     </section>
 
-    <div id="success-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-icon">✅</div>
+    <div id="request-success-modal" class="modal-overlay is-hidden">
+        <div class="modal-panel">
+            <div class="modal-symbol">✅</div>
             <h3>Request Sent!</h3>
             <p>Your mentorship request has been successfully sent. The mentor will review your profile and get back to
                 you shortly.</p>
-            <button id="close-modal" class="btn-primary full-width">Got it</button>
+            <button id="modal-close-btn" class="primary-btn full-width-btn">Got it</button>
         </div>
     </div>
 
