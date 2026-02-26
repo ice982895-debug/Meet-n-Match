@@ -9,6 +9,8 @@ from pydantic import BaseModel
 
 # Import your custom logic
 from mentor_matching_system import MentorMatchingSystem
+from database import engine, Base
+from auth import router as auth_router
 
 # --- Lifespan Logic ---
 # This replaces @app.on_event("startup")
@@ -20,6 +22,7 @@ async def lifespan(app: FastAPI):
     """
     # 1. Startup: Load data and train the model
     try:
+        Base.metadata.create_all(bind=engine) # Create DB tables
         base_dir = os.path.dirname(os.path.abspath(__file__))
         mentors_path = os.path.join(base_dir, "mentors.json")
         
@@ -46,6 +49,8 @@ matcher = MentorMatchingSystem()
 
 # --- App Initialization ---
 app = FastAPI(title="MentorHub API", lifespan=lifespan)
+
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
 # --- Middleware ---
 app.add_middleware(

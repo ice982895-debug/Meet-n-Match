@@ -3,3 +3,11 @@ uvicorn
 sqlalchemy
 scikit-learn
 pydantic
+werkzeug
+flask
+pandas
+flask-login
+flask-sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
