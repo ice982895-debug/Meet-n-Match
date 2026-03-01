@@ -35,7 +35,7 @@ CATEGORIES = {
             "Telehealth Platforms", "Meditech", "RedCap"
         ],
         "interests": [
-            "Patient Care", "Medical Etihcs", "Public Health", "Clinical Research",
+            "Patient Care", "Medical Ethics", "Public Health", "Clinical Research",
             "Mental Health Awareness", "Health Equity", "Telemedicine"
         ]
     },
