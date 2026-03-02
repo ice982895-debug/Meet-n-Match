@@ -9,6 +9,9 @@ from pydantic import BaseModel
 
 # Import your custom logic
 from mentor_matching_system import MentorMatchingSystem
+from auth import router as auth_router
+from database import engine
+import models
 
 # --- Lifespan Logic ---
 # This replaces @app.on_event("startup")
@@ -18,6 +21,9 @@ async def lifespan(app: FastAPI):
     Everything before 'yield' runs on Startup.
     Everything after 'yield' runs on Shutdown.
     """
+    # Create database tables if they don't exist
+    models.Base.metadata.create_all(bind=engine)
+
     # 1. Startup: Load data and train the model
     try:
         base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -56,6 +62,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# --- Include Auth Routes ---
+app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
+
 # --- Pydantic Models ---
 class MenteeProfile(BaseModel):
     job_title: str
@@ -67,6 +76,7 @@ class MenteeProfile(BaseModel):
 class MentorMatch(BaseModel):
     user_id: str
     job_title: str
+    field: str
     years_of_experience: int
     match_score: float
     bio: str
@@ -104,7 +114,7 @@ async def find_matches(profile: MenteeProfile):
     if not matcher.is_trained:
          raise HTTPException(status_code=503, detail="Model not trained yet.")
     
-    profile_dict = profile.dict()
+    profile_dict = profile.model_dump()
     matches = matcher.get_matches(profile_dict, top_n=5)
     return matches
 
